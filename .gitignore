@@ -1,0 +1,10 @@
+/Debug/
+/Release/
+/build/
+/driving_dataset/
+*.prefs
+.project
+.cproject
+*.*~
+!.gitignore
+
