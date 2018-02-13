@@ -33,17 +33,26 @@ batch_size = 100
 # train over the dataset about 30 times
 for epoch in range(epochs):
   for i in range(int(driving_data.num_images/batch_size)):
+
+    # ---- load train data in batch
     xs, ys = driving_data.LoadTrainBatch(batch_size)
+
+    # ---- run the training with 80 percent of dropout
     train_step.run(feed_dict={model.x: xs, model.y_: ys, model.keep_prob: 0.8})
-    if i % 10 == 0: #every 10 batch trainig, one valuation loss calculated
-      xs, ys = driving_data.LoadValBatch(batch_size) #locad valuation data
+
+    # ---- every 10 batch trainig, one valuation loss calculated
+    if i % 10 == 0: 
+      # load valuation data
+      xs, ys = driving_data.LoadValBatch(batch_size) #locad valuation data     
+      # calculate loss
       loss_value = loss.eval(feed_dict={model.x:xs, model.y_: ys, model.keep_prob: 1.0}) #calculate loss
       print("Epoch: %d, Step: %d, Loss: %g" % (epoch, epoch * batch_size + i, loss_value))
 
-    # write logs at every iteration
+    # ---- write logs at every iteration
     summary = merged_summary_op.eval(feed_dict={model.x:xs, model.y_: ys, model.keep_prob: 1.0})
     summary_writer.add_summary(summary, epoch * driving_data.num_images/batch_size + i)
 
+    # ---- save model parameters every 100 times;
     if i % batch_size == 0:
       if not os.path.exists(LOGDIR):
         os.makedirs(LOGDIR)

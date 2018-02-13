@@ -12,13 +12,13 @@ def bias_variable(shape):
 def conv2d(x, W, stride):
   return tf.nn.conv2d(x, W, strides=[1, stride, stride, 1], padding='VALID')
 
-x = tf.placeholder(tf.float32, shape=[None, 66, 200, 3])
+x = tf.placeholder(tf.float32, shape=[None, 66, 200, 3])#[batch, height, width, channels]
 y_ = tf.placeholder(tf.float32, shape=[None, 1])
 
 x_image = x
 
 #first convolutional layer
-W_conv1 = weight_variable([5, 5, 3, 24])
+W_conv1 = weight_variable([5, 5, 3, 24]) #[height, width, in_channels, out_channels]
 b_conv1 = bias_variable([24])
 
 h_conv1 = tf.nn.relu(conv2d(x_image, W_conv1, 2) + b_conv1)
@@ -48,11 +48,11 @@ b_conv5 = bias_variable([64])
 h_conv5 = tf.nn.relu(conv2d(h_conv4, W_conv5, 1) + b_conv5)
 
 #FCL 1
-W_fc1 = weight_variable([1152, 1164])
+W_fc1 = weight_variable([1152, 1164]) #[in_channels, out_channels]
 b_fc1 = bias_variable([1164])
 
-h_conv5_flat = tf.reshape(h_conv5, [-1, 1152])
-h_fc1 = tf.nn.relu(tf.matmul(h_conv5_flat, W_fc1) + b_fc1)
+h_conv5_flat = tf.reshape(h_conv5, [-1, 1152]) # to flatten to matrix for each row have 1152 items;
+h_fc1 = tf.nn.relu(tf.matmul(h_conv5_flat, W_fc1) + b_fc1) 
 
 keep_prob = tf.placeholder(tf.float32)
 h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)

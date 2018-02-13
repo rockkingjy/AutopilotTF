@@ -1,10 +1,13 @@
 /Debug/
 /Release/
 /build/
+/logs/
+/save/
 /driving_dataset/
 *.prefs
 .project
 .cproject
+*.pyc
 *.*~
 !.gitignore
 

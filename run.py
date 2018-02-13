@@ -15,10 +15,15 @@ smoothed_angle = 0
 
 cap = cv2.VideoCapture(0)
 while(cv2.waitKey(10) != ord('q')):
+    # ----Prepare inputs(image)
     ret, frame = cap.read()
     image = scipy.misc.imresize(frame, [66, 200]) / 255.0 #resize the images to 66*200 the same as the input of CNN;
-    # x:input images; y: predict output wheel degrees; keep_prob=dropout keep percentage;
+    
+    # ----Run the DNN to get the result(degree of wheel)
+    # # x:input images; y: predict output wheel degrees; keep_prob=dropout keep percentage;
     degrees = model.y.eval(feed_dict={model.x: [image], model.keep_prob: 1.0})[0][0] * 180 / scipy.pi 
+
+    # ----Print and show the result
     call("clear")
     print("Predicted steering angle: " + str(degrees) + " degrees")
     cv2.imshow('frame', frame)
